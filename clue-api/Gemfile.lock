@@ -25,7 +25,7 @@ GEM
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     public_suffix (4.0.3)
-    puma (3.12.4)
+    puma (3.12.6)
     rack (2.0.9)
     rack-protection (2.0.8.1)
       rack
@@ -74,7 +74,7 @@ DEPENDENCIES
   httparty (~> 0.16.2)
   newrelic_rpm (~> 4.8.0.341)
   octokit (~> 4.0)
-  puma (~> 3.12.0)
+  puma (~> 3.12.6)
   rack (~> 2.0.4)
   rack-test (~> 0.8.3)
   rake (~> 12.3.1)
