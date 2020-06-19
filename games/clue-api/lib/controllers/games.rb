@@ -87,11 +87,12 @@ module MakeApisFun
           return if response[:error]
 
           players = response['_metadata']['_players']
-          response['_metadata'].delete('_solution')
-
           players.each do |player|
             player.delete('cards')
+            player.delete('id')
           end if players.any?
+
+          response['_metadata'].delete('_solution')
 
           response
         end

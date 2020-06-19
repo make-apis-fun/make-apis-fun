@@ -19,6 +19,7 @@ module MakeApisFun
           end
 
           def create(num_players:3)
+            num_players = 4 if num_players == nil
             num_players = 3 if num_players < 3
             num_players = 6 if num_players > 6
 
@@ -327,7 +328,7 @@ module MakeApisFun
 
               if possible_cards_to_show.any?
                 return {
-                  player: { id: player['id'], name: player['name']},
+                  player: { name: player['name'] },
                   card: possible_cards_to_show.sample
                 }
               end

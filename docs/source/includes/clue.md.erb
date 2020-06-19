@@ -1,0 +1,430 @@
+<h1 id="clue-api">Clue Game</h1>
+
+Clue is a murder mystery game for *three* to *six* players that was devised in 1943 by *Anthony E. Pratt*.
+
+The object of the game is to determine **who** murdered the game's victim, **where** the crime took place, and **which** weapon was used. 
+
+To achieve this goal, you should analyze the game, think about how the cards are distributed between players and perform hypothesis in your turn. After each hypothesis, you will be closer to resolve the mistery. Read **Rules** section for more information about how the game works.
+
+<%= image_tag "http://github.com/jcagarcia/make-apis-fun/blob/master/games/clue-api/banner.png?raw=true" %>
+
+## Create a new game
+
+> Code samples
+
+```shell
+curl -X POST \
+  http://make-apis-fun.com/apis/clue/games \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "num_players": 6,
+    "against_machine": true
+  }'
+
+```
+
+`POST http://make-apis-fun.com/apis/clue/games`
+
+Perform this POST request in order to create a new game. You can specify the following parameters in the body payload:
+
+* **num_players** *(optional)*: Numeric parameter that indicates the number of players that the new game will have. If a number less than 3 is provided, the system sets 3 as the number of players. If a number bigger that 6 is provided, the system sets 6 as the number of players. If not provided, 4 players will be added by default.
+* **against_machine** *(optional)*: Boolean parameter that indicates if the game is going to be in `play_with_friends` mode or `play_against_the_machine` mode. If not provided, the system sets the `play_against_machine` mode by default.
+  * In `play_with_friends` mode, the creator of the game needs to share the game id with his friends and they should join the game using the `POST` join operation. **The creator needs to perform the join operation too**. When all the player will joined the game, it will start.
+  * In `play_against_the_machine` mode, the game is created with all the players joined except the last one. That players are bots of the system. The creator should join the match to start the game. In this mode, the hypothesys of the other players are performed automatically and **they will never try to resolve the game**, so after the player executes an action, is going to be his turn again.
+
+> Body parameter
+
+```json
+{
+  "num_players": 4,
+  "against_machine": true
+}
+```
+
+> Example responses
+
+> 200 Response - The game has been created correctly and is waiting for players to be joined. Right now, the system has choosen three cards (one suspect, one room, and one weapon) for this game.
+
+```json
+{
+    "id": "EeKLOld",
+    "num_players": 4,
+    "against_machine": true,
+    "status": "waiting_for_players",
+    "created_at": "19/06/2020 19:56:28",
+    "started_at": null,
+    "finished_at": null,
+    "_metadata": {
+        "_logs": [],
+        "_players": [
+          { "name": "Charlie F.", "turn": 0, "bot": true, "playing": true },
+          { "name": "Anne", "turn": 1, "bot": true, "playing": true },
+          { "name": "Anthony", "turn": 2, "bot": true, "playing": true }
+        ],
+        "_turn": 0,
+        "_winner": null
+    }
+}
+```
+## Get game info
+
+> Code samples
+
+```shell
+curl -X GET \
+  http://make-apis-fun.com/apis/clue/games/hua0wmr \
+  -H 'Content-Type: application/json'
+
+```
+
+`GET http://make-apis-fun.com/apis/clue/games/{game_id}`
+
+Perform this GET request in order to see the current status of the game. This endpoint is the **most important endpoint** you should perform if you want to:
+
+* **Know the current turn**. When you join the game, you have a turn assigned. If is not your turn, you cannot perform an hypothesis nor try to resolve the mistery. Use this endpoint to know the current turn and perform your actions if is your turn.
+
+* **Check the logs**. You need to check the logs to see what happened in the game during the turns of the other players. If you don't check this logs, is going to be harder for you to find the solution of the mistery.
+
+* **Check if the match finishes**. When the status changes to `finished`, means that you cannot perforrm a new hypothesis or try to resolve the game.
+
+> Path parameter
+
+```
+You must provide a valid `game_id` as a path parameter to obtain the information of a game
+```
+
+> Example Response
+
+> 200 Response
+
+```json
+{
+    "id": "hua0wmr",
+    "num_players": 3,
+    "status": "started",
+    "created_at": "19/06/2020 20:54:17",
+    "started_at": "19/06/2020 20:56:03",
+    "finished_at": null,
+    "_metadata": {
+        "_logs": [
+            "Player Charlie F. joined the game",
+            "Player Anne joined the game",
+            "Player Juan Carlos joined the game",
+            "The game has started at 19/06/2020 20:56:03"
+        ],
+        "_players": [
+            {
+                "name": "Charlie F.",
+                "turn": 0,
+                "bot": true,
+                "playing": true,
+                "game_id": "hua0wmr"
+            },
+            {
+                "name": "Anne",
+                "turn": 1,
+                "bot": true,
+                "playing": true,
+                "game_id": "hua0wmr"
+            },
+            {
+                "name": "Juan Carlos",
+                "turn": 2,
+                "bot": false,
+                "playing": true,
+                "game_id": "hua0wmr"
+            }
+        ],
+        "_turn": 0,
+        "_winner": null
+    }
+}
+```
+> 404 response - If you provide an invalid game id or the provided game id has expired:
+
+```json
+{
+    "error": "Invalid or expired game id"
+}
+```
+
+## Join to a game
+
+> Code samples
+
+```shell
+curl -X POST \
+  http://make-apis-fun.com/apis/clue/games/EeKLOld/join \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "player_name": "Juan Carlos"
+  }'
+
+```
+
+`POST http://make-apis-fun.com/apis/clue/games/{game_id}/join`
+
+Perform this POST request in order to join to an existing game. You can specify the following parameters in the body payload:
+
+* **player_name** *(mandatory)*: String that indicates the name of the new player that is going to join to the existing game.
+
+
+The response will include your player id. You must keep this **player_id** in mind, because you will need it in order to perform hypothesis.
+
+Also, the response will include **the cards assigned to you**, so you know that all the murderers or weapons or rooms you have in your hand are not part of the solution. 😉
+
+After all the players join the game, the game will automatically change its status to `started` and **the player with turn 0 can start performing an hypothesis**. Remember that if you are playing in `play_against_the_machine` mode, you will be the last player, but as all the other players performs actions automatically, **is going to be always your turn**.
+
+> Path parameter
+
+```
+You must provide a valid `game_id` as a path parameter to join as a new player
+```
+
+> Body parameter
+
+```json
+{
+  "player_name": "Juan Carlos"
+}
+```
+
+> Example responses
+
+> 200 Response - The player has joined correctly. It returns the new player created inside the system including the assigned cards.
+
+
+```json
+{
+    "id": "rlXSypz",
+    "name": "Juan Carlos",
+    "turn": 3,
+    "cards": [
+        { "id": 9, "name": "Keyboard" },
+        { "id": 15, "name": "Library" },
+        { "id": 11, "name": "Shoe" },
+        { "id": 3, "name": "Sophie" },
+        { "id": 13, "name": "Hall" },
+        { "id": 5, "name": "Lewis" }
+    ],
+    "playing": true,
+    "bot": false,
+    "game_id": "EeKLOld"
+}
+```
+> 404 response - If you provide an invalid game id or the provided game id has expired:
+
+```json
+{
+    "error": "Invalid or expired game id"
+}
+```
+
+> 422 response - If you provide a `player_name` that is already a player for that game:
+
+```json
+{
+    "error": "There is another player with the same name. Use a different one."
+}
+```
+
+> 422 response - If the name has more than 12 characters:
+
+```json
+{
+    "error": "The name cannot have more than 12 characters. Use a different one."
+}
+```
+
+> 422 response - If the game is already started:
+
+```json
+{
+    "error": "Game already started"
+}
+```
+
+> 422 response - If the game has finished:
+
+```json
+{
+    "error": "Finished game"
+}
+```
+
+## Perform an hypothesis
+
+> Code samples
+
+```shell
+curl -X POST \
+  http://make-apis-fun.com/apis/clue/games/EeKLOld/hypothesis \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "player_id": "rlXSypz",
+    "cards": [
+      { "id": 0, "name": "James"},
+      { "id": 6, "name": "Bottle"},
+      { "id": 12, "name": "Study"}
+    ]
+  }'
+
+```
+
+`POST http://make-apis-fun.com/apis/clue/games/{game_id}/hypothesis`
+
+
+Execute this POST request in order to perform an hypothesis. In the original board game, once a player makes a suggestion, the others are called upon to disprove it. If the player to their left holds any of the three named cards, that player must privately show one (and only one) of the cards to them. If not, the process continues clockwise around the table until either one player disproves the suggestion, or no one can do so. A player's turn normally ends once their suggestion is completed. 
+
+However, in this API version, as a player cannot wait to other player actions, the players that have any of the suggested cards will not need to perform any action. **Is the system who will automatically return a card** to the requester following the strategy explained above.
+
+**You can perform this operation only if is your turn**. Check the game info to see how the turns are passing and check the logs to see the last operations
+
+You can specify the following parameters in the body payload:
+
+* **player_id** *(mandatory)*: String that contains the identifier of the player that is making the request. This id had been returned after the join operation. 
+
+* **cards** *(mandatory)*: A set of cards to make your hypothesis. *Check the `/cards` endpoint to retrieve all the available cards in the game*. To perform an hypothesis, you must include three cards. 
+  * The first one must be a *murder* type card.
+  * The second one must be a *weapon* type. card
+  * The third one must be a *room* type card.
+
+
+The response of this request can be empty if no other player has any of the cards you have requested. Or an object with one of the cards you requested and the player name who gives you the card. This is really useful to resolve the mistery.
+
+> Path parameter
+
+```
+You must provide a valid `game_id` as a path parameter to join as a new player
+```
+
+> Body parameters
+
+```json
+{
+  "player_id": "rlXSypz",
+  "cards": [
+    { "id": 0, "name": "James"},
+    { "id": 6, "name": "Bottle"},
+    { "id": 12, "name": "Study"}
+  ]
+}
+```
+
+> Sample Responses
+
+> 200 Response - When some other player has one of the cards you have included in the hypothesis.
+
+```json
+{
+    "player": {
+        "name": "Anne"
+    },
+    "card": {
+        "id": 0,
+        "name": "James"
+    }
+}
+```
+
+> 200 Response - When no other player returns a card to you 😱 Maybe that means that you are close!
+
+```json
+{
+    "player": {
+        "name": "Anne"
+    },
+    "card": {
+        "id": 0,
+        "name": "James"
+    }
+}
+```
+
+> 404 response - If you provide an invalid game id or the provided game id has expired:
+
+```json
+{
+    "error": "Invalid or expired game id"
+}
+```
+> 422 Response - When the game didn't start yet
+
+TODO
+
+> 422 Response - When the game already finish
+
+TODO
+
+> 422 Response - When a player out of his turn tries to perform an hypothesis
+
+TODO
+
+> 422 Response - When a player that is not his turn tries to perform an hypothesis
+
+```json
+{
+    "error": "Is not the turn of this player"
+}
+```
+
+> 422 Response - When invalid name of card is provided
+
+TODO
+
+> 422 Response - When wrong number of cards is provided
+
+TODO
+
+> 422 Response - When not one card of each type is provided
+
+TODO
+
+## Resolve
+
+TODO
+
+## List cards
+
+TODO
+
+
+## Rules and Hints
+
+When some player creates the new game using the `POST` endpoint, three cards (one suspect, one room, and one weapon) are chosen at random. Those cards are not going to be provided by any endpoint in any moment, so no one can see them. **These cards represent the facts of the case**. The remainder of the cards are distributed among the players. 
+
+The objective of the game is to deduce the details of the murder, i.e. the cards selected randomly by the system. There are **six characters**, **six murder weapons** and **nine rooms**, leaving the players with **324 possibilities**. As soon as the turn of a player starts, they may perform an hypothesis as to the details, naming a suspect, a room and a weapon. For example: "I suggest it was James, in the Dining Room, with the Knife." A player's suggestion may name themself as the murderer and may include cards in their own hand.
+
+Once a player makes a suggestion, the others are called upon to disprove it. If the player to their left holds any of the three named cards, that player must privately show one (and only one) of the cards to them. If not, the process continues clockwise around the table until either one player disproves the suggestion, or no one can do so. A player's turn normally ends once their suggestion is completed. 
+
+**NOTE**: In this API version, as a player cannot wait to other player actions, the players that have any of the suggested cards will not need to perform any action. **Is the system who will automatically return a card** to the requester following the strategy explained above.
+
+A player who believes they have determined the correct elements may try to resolve on their turn. The accusation can include any room, any weapon and any murderer. **If they match the accusation, the player wins and the game is marked as finished**; if not, the player may not perform hypothesis/resolve actions for the remainder of the game; **in effect, "losing"**. However, other players will continue receiving cards from that disabled player in order to disprove suggestions.
+
+### Hints
+
+#### Check the logs
+
+Each player begins the game with three to six cards in their hand, depending on the number of players. **Keeping track of which cards are shown to each player is important in deducing the solution.** To do that, the players **must perform a `GET` endpoint to see the status of the game and check the logs that contains the iterations that happened during all the match**.
+
+The logs keep all **the hypothesis** made by all the players and which cards had been shown by the rest of the players. It can also be useful in deducing **which cards the other players have shown one another**. For example, if *Player A* disproves *Player B* suggestion that *James* did the crime in the *Ballroom* with the *Guitar*, a player with both the *Ballroom* and *James* cards in their hand can then deduce that *Player A* has the *Guitar*. **A player makes a suggestion to learn which cards may be eliminated from suspicion**. However, in some cases it **may be advantageous for a player to include one of their own cards in a suggestion**. This technique can be used for both forcing a player to reveal a different card as well as misleading other players into believing a specific card is suspect.
+
+#### Notetaking
+
+One reason the game is enjoyed by many ages and skill levels is that the complexity of note-taking can increase as a player becomes more skillful. Beginners may simply mark off the cards they have been shown; more advanced players will keep track of who has and who does not have a particular card, possibly with the aid of an additional grid. Expert players may keep track of each suggestion made, knowing that the player who answers it must have at least one of the cards named; which one can be deduced by later events. One can also keep track of which cards a given player has seen, in order to minimize information revealed to that player and/or to read into that player's suggestions. 
+
+**NOTE**: In this API version, the API offers a `GET` endpoint to retrieve information about the `match`. The response includes a `log` that contains the iterations that happened during all the match. **We really recommend you to check the logs and not only take into account the responses you receive when perform an hypothesis**
+
+## Appendix
+
+As this is an API version and not the original board version, it has some limitations.
+
+* In tis API version there is not any board, so the players just perform hypothesis during their turn without needed of move across the board.
+
+* When a new game is created, the player can specify the number of players (3 to 6). Also, the player can specify if the game is going to be in `play_with_friends` mode or `play_against_the_machine` mode.
+  * In `play_with_friends` mode, the creator of the game needs to share the game id with his friends and they should join the game using the `POST` join operation. **The creator needs to perform the join operation too**. When all the player will joined the game, it will start.
+  * In `play_against_the_machine` mode, the game is created with all the players joined except the last one. That players are bots of the system. The creator should join the match to start the game. In this mode, the hypothesys of the other players are performed automatically and **they will never try to resolve the game**, so after the player executes an action, is going to be his turn again.
+
+* The turns don't expire in time. So until a player don't perform an hypothesis action, the next player will not be able to perform its hypothesis. Meanwhile, other players can check the **Logs** of the game using the `GET` operation in order to analyze the situation and try to resolve the mistery.
+
+* If any hypothesis has been performed in **5 minutes**, the system assumes that the game has finished without any winner.

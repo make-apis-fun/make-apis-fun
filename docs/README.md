@@ -10,9 +10,10 @@ You can check the documentation of the "Make APIs fun" project in http://make-ap
 
 ### Local
 
-Inside the `docs` folder, perform the following command:
+Inside the `docs` folder, perform the following commands:
 
 ```
+docker build . -t slate
 docker run -d --rm --name slate -p 4567:4567 -v $(pwd)/build:/srv/slate/build -v $(pwd)/source:/srv/slate/source slate
 ```
 

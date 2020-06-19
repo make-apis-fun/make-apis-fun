@@ -31,8 +31,8 @@ As this is an API version and not the original board version, it has some limita
 * In tis API version there is not any board, so the players just perform hypothesis during their turn without needed of move across the board.
 
 * When a new game is created, the player can specify the number of players (3 to 6). Also, the player can specify if the game is going to be in `play_with_friends` mode or `play_against_the_machine` mode.
-** In `play_with_friends` mode, the creator of the game needs to share the game id with his friends and they should join the game using the `POST` join operation. **The creator needs to perform the join operation too**. When all the player will joined the game, it will start.
-** In `play_against_the_machine` mode, the game is created with all the players joined except the last one. That players are bots of the system. The creator should join the match to start the game. In this mode, the hypothesys of the other players are performed automatically and **they will never try to resolve the game**, so after the player executes an action, is going to be his turn again.
+  ** In `play_with_friends` mode, the creator of the game needs to share the game id with his friends and they should join the game using the `POST` join operation. **The creator needs to perform the join operation too**. When all the player will joined the game, it will start.
+  ** In `play_against_the_machine` mode, the game is created with all the players joined except the last one. That players are bots of the system. The creator should join the match to start the game. In this mode, the hypothesys of the other players are performed automatically and **they will never try to resolve the game**, so after the player executes an action, is going to be his turn again.
 
 * The turns don't expire in time. So until a player don't perform an hypothesis action, the next player will not be able to perform its hypothesis. Meanwhile, other players can check the **Logs** of the game using the `GET` operation in order to analyze the situation and try to resolve the mistery.
 
