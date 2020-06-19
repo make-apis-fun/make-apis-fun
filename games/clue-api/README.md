@@ -8,6 +8,10 @@ To achieve this goal, you should analyze the game, think about how the cards are
 
 ![https://github.com/jcagarcia/make-apis-fun/tree/master/games/clue-api/banner.png](banner.png)
 
+## Documentation
+
+Check how to play Clue using the Rest endpoints [here](http://make-apis-fun.com/docs)
+
 ## Rules
 
 When some player creates the new game using the `POST` endpoint, three cards (one suspect, one room, and one weapon) are chosen at random. Those cards are not going to be provided by any endpoint in any moment, so no one can see them. **These cards represent the facts of the case**. The remainder of the cards are distributed among the players. 
