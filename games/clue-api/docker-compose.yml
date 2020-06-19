@@ -1,0 +1,25 @@
+version: '3.4'
+services:
+  clue-api:
+    build:
+      context: .
+      target: test
+    volumes:
+      - .:/app
+    env_file:
+      - local.env
+    expose:
+      - '8080'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../data/redis:/data
+    restart: always
