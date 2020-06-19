@@ -2,7 +2,7 @@
 
 Welcome to the "Make APIs fun" open source project 🔥 Who said that works with Rest APIs was boring?
 
-In this repository you will find a set of APIs to play classic board games using just REST requests 😱 It sounds amazing, isn't it?
+In this repository you will find a set of APIs to play classic board games using just REST requests 😱
 
 ![https://github.com/jcagarcia/make-apis-fun/blob/master/banner.png](banner.png)
 
@@ -34,7 +34,7 @@ Enjoy it!
 
 ## List of games
 
-* (Clue)[https://github.com/jcagarcia/make-apis-fun/tree/master/games/clue-api]
+* [Clue](https://github.com/jcagarcia/make-apis-fun/tree/master/games/clue-api): Cards game
 
 ## Contributions
 

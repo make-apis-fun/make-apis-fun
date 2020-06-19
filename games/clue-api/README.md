@@ -55,7 +55,7 @@ One reason the game is enjoyed by many ages and skill levels is that the complex
 
 ## Author
 
-Clue (API Version) by (Juan Carlos García)[https://github.com/jcagarcia]
+Clue (API Version) by [jcagarcia](https://github.com/jcagarcia)
 
 ### Contributors
 
