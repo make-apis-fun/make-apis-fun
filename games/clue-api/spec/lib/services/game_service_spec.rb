@@ -499,7 +499,7 @@ describe MakeApisFun::ClueApi::Services::GameService do
           )
 
           expect(response).to eq({
-            player: { id: 'player_two_id', name: 'player_two'},
+            player: { name: 'player_two'},
             card: { 'id' => 10, 'name' => 'card_name' }
           })
         end
