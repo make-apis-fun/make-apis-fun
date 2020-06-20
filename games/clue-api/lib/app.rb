@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json'
 require_relative 'health/server'
 require_relative 'controllers/index'
+require_relative 'controllers/cards'
 require_relative 'controllers/games'
 
 Application = Rack::Builder.app do
@@ -11,6 +12,10 @@ Application = Rack::Builder.app do
 
   map '/' do
     run MakeApisFun::ClueApi::Controllers::Index.new
+  end
+
+  map '/cards' do
+    run MakeApisFun::ClueApi::Controllers::Cards.new
   end
 
   map '/games' do

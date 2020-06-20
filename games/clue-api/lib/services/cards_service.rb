@@ -33,6 +33,10 @@ module MakeApisFun
         }
 
         class << self
+          def fetch_all
+            GAME_CARDS
+          end
+
           def random_murderer_card
             random_card_by(path: 'murderers')
           end

@@ -37,6 +37,20 @@ describe MakeApisFun::ClueApi::Services::CardsService do
     ]
   end
 
+  describe '.fetch_all' do
+    it 'return an object with all the cards' do
+      expected_cards = {
+        'murderers' => murderers_cards,
+        'weapons' => weapons_cards,
+        'rooms' => rooms_cards
+      }
+
+      response = described_class.fetch_all
+
+      expect(response).to eq(expected_cards)
+    end
+  end
+
   describe '.random_murderer_card' do
     it 'return one of the murderer cards' do
       response = described_class.random_murderer_card
