@@ -9,5 +9,4 @@ includes:
 search: true
 highlight_theme: darkula
 headingLevel: 3
-
 ---

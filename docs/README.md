@@ -10,7 +10,7 @@ You can check the documentation of the "Make APIs fun" project in http://make-ap
 
 ### Local
 
-Inside the `docs` folder, perform the following commands:
+Inside this folder, perform the following commands:
 
 ```
 docker build . -t slate
@@ -31,4 +31,4 @@ All the APIs games developed under the "Make APIs fun" project should document a
 
 All the documentation files are included under the `sources/includes` folder. 
 
-I you have created or you are creating a new game, you must create a new `markdown` file using the name of your game and including on it all the endpoints you want to offer to the consumers.
+If you have created or you are creating a new game, you must create a new `markdown` file using the name of your game and including on it all the endpoints you want to offer to the consumers.

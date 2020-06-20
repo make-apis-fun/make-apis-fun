@@ -2,7 +2,7 @@
 
 Welcome to the "Make APIs fun" open source project 🔥 Who said that works with Rest APIs was boring?
 
-In this repository you will find a set of APIs to play classic board games using just REST requests 😱
+Usually, we relate the Rest APIs with simple CRUD operations and boring management applications. In this repository you will find a set of APIs to **play classic board games** using just REST requests 😱
 
 ![https://github.com/jcagarcia/make-apis-fun/blob/master/banner.png](banner.png)
 
@@ -45,8 +45,9 @@ Feel free to write new API games **using the language you prefer**. We 💛 all 
 You must follow these instructions if you are thinking on to do a Pull-Request to this repository:
 
 * Your game must be inside the `games` folder.
-* Your game must be dockerized to allow us to deploy it automatically in our page 🙂
+* Your game must be `dockerized` to allow us to deploy it automatically in our page 🙂
 * Your game must contain a `Makefile` with an `up` action to be able to run the game.
+* Your game must be configured to pass the travis CI 🚨
 * Your game must contain a `README` file explaining the game and the rules.
 * You must update the "Make APIs fun" documentation explaining how to play to your new game 🤓 
 
