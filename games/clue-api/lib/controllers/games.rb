@@ -1,10 +1,10 @@
 require 'sinatra'
 require 'json'
+require_relative '../actions/games/create'
 require_relative '../actions/games/fetch'
 require_relative '../actions/games/join'
 require_relative '../actions/games/hypothesis'
 require_relative '../actions/games/resolve'
-require_relative '../services/game_service'
 
 module MakeApisFun
   module ClueApi
@@ -16,10 +16,12 @@ module MakeApisFun
 
         post '/' do
           payload = JSON.parse(request.body.read)
-          num_players = payload['num_players']
+          num_players = payload['num_players'] || 4
+          against_machine = payload['against_machine'] || true
 
-          response = Services::GameService.create(
-            num_players: num_players
+          response = Actions::Games::Create.do(
+            num_players: num_players,
+            against_machine: against_machine
           )
 
           obfuscate_data(response)
@@ -90,6 +92,7 @@ module MakeApisFun
           players.each do |player|
             player.delete('cards')
             player.delete('id')
+            player.delete('game_id')
           end if players.any?
 
           response['_metadata'].delete('_solution')

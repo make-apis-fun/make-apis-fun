@@ -10,6 +10,12 @@ module MakeApisFun
         STARTED = 'started'.freeze
         FINISHED = 'finished'.freeze
 
+        BOT_NAMES = ['Millard', 'Margot', 'Valarie', 'Charlsie', 'Maren', 'Myra', 'Chang', 'Margaret', 'Deangelo', 
+          'Lenore', 'Afton', 'Ardell', 'Jim', 'Marilynn', 'Roberta', 'Calvin', 'Alix', 'Corey', 'Johnetta', 'Shaunna',
+          'Scot', 'Jame', 'Asha', 'Ginny', 'Tonya', 'Lauran', 'Doloris', 'Codi', 'Eloy', 'Shalonda', 'Fransisca', 'Tanna',
+          'Breann', 'Refugia', 'Emilia', 'Ocie', 'Armando', 'Johna', 'Florine', 'Lucius', 'Lawrence', 'Artie', 'Pamela',
+          'Selina', 'Kimberli', 'Lemuel', 'Junko', 'Hermina', 'Drusilla', 'Elijah'].freeze
+
         class << self
           def fetch_by(id:)
             stored_game = Repository.get(id)
@@ -18,15 +24,14 @@ module MakeApisFun
             JSON.parse(stored_game)
           end
 
-          def create(num_players:3)
-            num_players = 4 if num_players == nil
+          def create(num_players: 4)
             num_players = 3 if num_players < 3
             num_players = 6 if num_players > 6
 
             create_game(num_players)
           end
 
-          def join_to(id:, player_name:)
+          def join_to(id:, player_name:, bot: false)
             existing_game = fetch_by(id: id)
             
             validate_game_already_started!(existing_game)
@@ -35,7 +40,7 @@ module MakeApisFun
             validate_not_empty!(player_name, 'name')
             validate_repeated_names!(existing_game, player_name)
 
-            new_player = new_player_with_cards_and_turn(player_name, existing_game)
+            new_player = new_player_with_cards_and_turn(player_name, existing_game, bot)
             players_for(existing_game) << new_player
             update(id, existing_game)
             new_player[:game_id] = id
@@ -43,6 +48,20 @@ module MakeApisFun
             LogService.log_join(game: existing_game, player: new_player)
 
             new_player
+          end
+
+          def join_bots_to(id:)
+            existing_game = fetch_by(id: id)
+
+            validate_game_already_started!(existing_game)
+            validate_not_finished!(existing_game)
+            validate_no_more_players_allowed!(existing_game)
+
+            bots_to_add = existing_game['num_players'] - 1
+
+            bots_to_add.times do |bot|
+              join_to(id: id, player_name: random_player_name_for(id), bot: true)
+            end
           end
 
           def start(id:)
@@ -214,13 +233,14 @@ module MakeApisFun
             game['_metadata']['_players']
           end
 
-          def new_player_with_cards_and_turn(name, game)
+          def new_player_with_cards_and_turn(name, game, bot)
             {
               'id' => SecureRandom.alphanumeric(7),
               'name' => name,
               'turn' => next_turn_for(game),
               'cards' => CardsService.get_cards_for_player_by(game),
-              'playing' => true
+              'playing' => true,
+              'bot' => bot
             }
           end
 
@@ -372,6 +392,18 @@ module MakeApisFun
 
           def now
             Time.now.strftime("%d/%m/%Y %H:%M:%S")
+          end
+
+          def random_player_name_for(game_id)
+            candidate = BOT_NAMES.sample(1).first
+
+            game = fetch_by(id: game_id)
+            current_players = players_for(game)
+
+            same_name_player = current_players.find { |player| player['name'] == candidate }
+            return random_player_name_for(game_id) if same_name_player
+
+            candidate
           end
         end
       end
