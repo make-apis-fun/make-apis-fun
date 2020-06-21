@@ -14,7 +14,7 @@ RUN bundle install -j 10 --quiet \
 
 COPY . $APP
 
-CMD ["bundle", "exec", "puma", "config.ru", "-C", "puma.rb", "-p", "8080"]
+CMD ["bundle", "exec", "puma", "config.ru", "-C", "puma.rb", "-p", "8085"]
 
 FROM base as release
 RUN apk --update add --virtual build_deps build-base g++ linux-headers
@@ -24,7 +24,7 @@ RUN bundle install -j 10 --quiet --deployment --without development test \
 COPY . $APP
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
-CMD ["bundle", "exec", "puma", "config.ru", "-C", "puma.rb", "-p", "8080"]
+CMD ["bundle", "exec", "puma", "config.ru", "-C", "puma.rb", "-p", "8085"]
 
-EXPOSE 8080
+EXPOSE 8085
 

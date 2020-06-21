@@ -9,9 +9,9 @@ services:
     env_file:
       - local.env
     expose:
-      - '8080'
+      - '8085'
     ports:
-      - '8080:8080'
+      - '8085:8085'
     depends_on:
       - redis
 

@@ -26,7 +26,7 @@ git clone https://github.com/jcagarcia/make-apis-fun.git
 ~/make-apis-fun/games $ cd clue-api/
 ~/make-apis-fun/games/clue-api $ make up
 ```
-3. The desired game will be running in `localhost:8080`. You can use [curl](https://github.com/curl/curl), [postman](https://github.com/postmanlabs), etc. to start playing. 
+3. The desired game will be running in `localhost:8085`. You can use [curl](https://github.com/curl/curl), [postman](https://github.com/postmanlabs), etc. to start playing.
 
 4. **Remember to read the documentation** of each game carefuly before start playing.
 
