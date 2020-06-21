@@ -45,7 +45,7 @@ Feel free to write new API games **using the language you prefer**. We 💛 all 
 You must follow these instructions if you are thinking on to do a Pull-Request to this repository:
 
 * Your game must be inside the `games` folder.
-* Your game must be `dockerized` to allow us to deploy it automatically in our page 🙂
+* Your game must be `dockerized` to allow us to deploy it automatically in our page 🙂 each game should be exposed in a different port.
 * Your game must contain a `Makefile` with an `up` action to be able to run the game and a `test` action to perform the tests of your game.
 * Your game must be included inside the `.travis.yml` file to pass the travis CI 🚨
 * Your game must contain a `README` file explaining the game and the rules.
