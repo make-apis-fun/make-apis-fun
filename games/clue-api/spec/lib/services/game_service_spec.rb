@@ -513,6 +513,11 @@ describe MakeApisFun::ClueApi::Services::GameService do
         allow(MakeApisFun::ClueApi::Services::GameService::Repository).to receive(:get)
             .with('existing_id').and_return(started_game.to_json)
 
+        expected_response = {
+          player: nil,
+          card: nil
+        }
+
         response = described_class.run_hypothesis_for(
           id: 'existing_id',
           requester_id: 'player_one_id',
@@ -523,7 +528,7 @@ describe MakeApisFun::ClueApi::Services::GameService do
           ]
         )
 
-        expect(response).to be nil
+        expect(response).to eq(expected_response)
       end
 
       it 'logs an event about the hypothesis' do
@@ -836,7 +841,7 @@ describe MakeApisFun::ClueApi::Services::GameService do
           .with('existing_id').and_return(started_game.to_json)
       expect(MakeApisFun::ClueApi::Services::GameService::Repository).to receive(:save).
         with('existing_id', hash_including('_metadata' => hash_including(
-          '_winner' => 'player_one_id'
+          '_winner' => 'player_one'
         )))
 
       response = described_class.update_winner_for(id: 'existing_id', winner_id: 'player_one_id')

@@ -15,6 +15,7 @@ module MakeApisFun
               else
                 disable_user(game_id, player_id)
                 update_turn(game_id)
+                perform_bots_actions_for(game_id)
 
                 return { status: 'WRONG', message: 'Sorry, your solution was not valid. You cannot continue playing :(' }
               end
@@ -42,6 +43,10 @@ module MakeApisFun
 
             def update_turn(game_id)
               Services::GameService.update_turn_for(id: game_id)
+            end
+
+            def perform_bots_actions_for(game_id)
+              Services::GameService.perform_bots_actions_for(id: game_id)
             end
           end
         end

@@ -5,6 +5,7 @@ require_relative '../actions/games/fetch'
 require_relative '../actions/games/join'
 require_relative '../actions/games/hypothesis'
 require_relative '../actions/games/resolve'
+require_relative '../actions/games/players/fetch_cards'
 
 module MakeApisFun
   module ClueApi
@@ -15,9 +16,12 @@ module MakeApisFun
         end
 
         post '/' do
-          payload = JSON.parse(request.body.read)
+          body = request.body.read
+
+          payload = {}
+          payload = JSON.parse(body) unless body.empty?
           num_players = payload['num_players'] || 4
-          against_machine = payload['against_machine'] || true
+          against_machine = payload['against_machine']
 
           response = Actions::Games::Create.do(
             num_players: num_players,
@@ -31,7 +35,10 @@ module MakeApisFun
         end
 
         post '/:game_id/join' do
-          payload = JSON.parse(request.body.read)
+          body = request.body.read
+
+          payload = {}
+          payload = JSON.parse(body) unless body.empty?
           player_name = payload['player_name']
 
           response = Actions::Games::Join.do(
@@ -45,7 +52,8 @@ module MakeApisFun
 
         get '/:game_id' do
           response = Actions::Games::Fetch.do(
-            game_id: params['game_id'])
+            game_id: params['game_id']
+          )
 
           obfuscate_data(response)
 
@@ -54,7 +62,10 @@ module MakeApisFun
         end
 
         post '/:game_id/hypothesis' do
-          payload = JSON.parse(request.body.read)
+          body = request.body.read
+
+          payload = {}
+          payload = JSON.parse(body) unless body.empty?
           player_id = payload['player_id']
           cards = payload['cards']
 
@@ -69,7 +80,10 @@ module MakeApisFun
         end
 
         post '/:game_id/resolve' do
-          payload = JSON.parse(request.body.read)
+          body = request.body.read
+
+          payload = {}
+          payload = JSON.parse(body) unless body.empty?
           player_id = payload['player_id']
           cards = payload['cards']
 
@@ -77,6 +91,16 @@ module MakeApisFun
             game_id: params['game_id'],
             player_id: player_id, 
             cards: cards
+          )
+
+          status_by(response)
+          response.to_json
+        end
+
+        get '/:game_id/players/:player_id/cards' do
+          response = Actions::Games::Players::FetchCards.do(
+            game_id: params['game_id'],
+            player_id: params['player_id']
           )
 
           status_by(response)

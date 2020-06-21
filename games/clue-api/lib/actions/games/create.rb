@@ -9,7 +9,7 @@ module MakeApisFun
             def do(num_players:, against_machine:)
               new_game_id = create_game(num_players)['id']
 
-              join_bots_to(new_game_id) if against_machine
+              join_bots_to(new_game_id) if against_machine.nil? || against_machine.to_s.downcase == 'true'
 
               fetch_by(new_game_id)
             rescue => e

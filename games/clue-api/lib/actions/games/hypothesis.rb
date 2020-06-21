@@ -8,8 +8,8 @@ module MakeApisFun
           class << self
             def do(game_id:, player_id:, cards:)
               player_with_card = run_hypothesis_for(game_id, player_id, cards)
-
               update_turn(game_id)
+              perform_bots_actions_for(game_id)
 
               player_with_card
             rescue => e
@@ -24,6 +24,10 @@ module MakeApisFun
 
             def update_turn(game_id)
               Services::GameService.update_turn_for(id: game_id)
+            end
+
+            def perform_bots_actions_for(game_id)
+              Services::GameService.perform_bots_actions_for(id: game_id)
             end
           end
         end

@@ -9,7 +9,10 @@ module MakeApisFun
             def do(game_id:, player_name:)
               new_user = join_to(game_id, player_name)
 
-              start(game_id) if should_start?(game_id)
+              if should_start?(game_id)
+                start(game_id)
+                perform_bots_actions_for(game_id)
+              end
 
               new_user
             rescue => e
@@ -28,6 +31,10 @@ module MakeApisFun
 
             def start(game_id)
               Services::GameService.start(id: game_id)
+            end
+
+            def perform_bots_actions_for(game_id)
+              Services::GameService.perform_bots_actions_for(id: game_id)
             end
           end
         end

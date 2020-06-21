@@ -252,7 +252,7 @@ Also, the response will include **the cards assigned to you**, so you know that 
 
 After all the players join the game, the game will automatically change its status to `started` and **the player with turn 0 can start performing an hypothesis**. Remember that if you are playing in `play_against_the_machine` mode, you will be the last player, but as all the other players performs actions automatically, **is going to be always your turn**.
 
-## List all the cards available
+## List all the game cards
 
 `GET http://make-apis-fun.com/apis/clue/cards`
 
@@ -300,6 +300,75 @@ curl -X GET \
 }
 ```
 In order to perform an hypothesis, you must know the cards that are present in the game. You can check each time this guide to know the ids and the names of the cards, but maybe is faster to execute this `GET` operation to retrieve the complete list of the existing cards.
+
+## List your assigned cards
+
+`GET http://make-apis-fun.com/apis/clue/games/{game_id}/players/{player_id}/cards`
+
+> Code samples
+
+```shell
+curl -X GET \
+  http://make-apis-fun.com/apis/clue/games/EeKLOld/players/rlXSypz/cards
+
+```
+
+> Path parameters
+
+```
+You must provide a valid `game_id` as a path parameter to check your cards
+You must provide a valid `player_id` as a path parameter to check your cards
+```
+
+> Sample Responses
+
+> 200 Response - Gets a complete list of your assigned cards
+
+```json
+{
+    "cards": [
+        {
+            "id": 12,
+            "name": "Study"
+        },
+        {
+            "id": 2,
+            "name": "Matthew"
+        },
+        {
+            "id": 18,
+            "name": "Kitchen"
+        },
+        {
+            "id": 20,
+            "name": "Conservatory"
+        },
+        {
+            "id": 13,
+            "name": "Hall"
+        }
+    ]
+}
+```
+
+> 404 response - If you provide an invalid game id or the provided game id has expired:
+
+```json
+{
+    "error": "Invalid or expired game id"
+}
+```
+
+> 422 response - If you provide an invalid player id
+
+```json
+{
+    "error": "User not found"
+}
+```
+
+When you join to an existing game, the response includes the cards that have been assigned to you. However, if you need to check your assigned cards again, use this endpoint to get them.
+
 
 ## Perform an hypothesis
 
@@ -373,6 +442,7 @@ You must provide a valid `game_id` as a path parameter to make an hypothesis
     "error": "Invalid or expired game id"
 }
 ```
+
 > 422 Response - When the game didn't start yet
 
 ```json

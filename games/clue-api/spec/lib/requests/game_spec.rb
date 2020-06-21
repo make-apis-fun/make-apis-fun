@@ -3,7 +3,7 @@ require 'controllers/games'
 
 describe MakeApisFun::ClueApi::Controllers::Games do
   describe 'POST /games' do
-    it 'creates a new empty game without any player in waiting for players statuses' do
+    it 'creates a new game with 4 players and agains machine mode by default' do
       expected_response = {
         'id' => anything,
         'num_players' => 4,
@@ -12,18 +12,68 @@ describe MakeApisFun::ClueApi::Controllers::Games do
         'started_at' => nil,
         'finished_at' => nil,
         '_metadata' => {
-          '_logs' => [],
-          '_players' => [],
+          '_logs' => anything,
+          '_players' => anything,
           '_turn' => 0,
           '_winner' => nil
         }
       }
 
-      post '/games', { num_players: 4 }.to_json
+      post '/games'
 
       response = JSON.parse(last_response.body)
       expect(last_response.status).to eq(200)
       expect(response).to include(expected_response)
+    end
+
+    context 'when number of players is provided' do
+      it 'creates a new game with the number of players' do
+        expected_response = {
+          'id' => anything,
+          'num_players' => 5,
+          'status' => 'waiting_for_players',
+          'created_at' => anything,
+          'started_at' => nil,
+          'finished_at' => nil,
+          '_metadata' => {
+            '_logs' => anything,
+            '_players' => anything,
+            '_turn' => 0,
+            '_winner' => nil
+          }
+        }
+
+        post '/games', { num_players: 5 }.to_json
+
+        response = JSON.parse(last_response.body)
+        expect(last_response.status).to eq(200)
+        expect(response).to include(expected_response)
+      end
+    end
+
+    context 'when against machine mode false is provided' do
+      it 'creates a new game without including bots' do
+        expected_response = {
+          'id' => anything,
+          'num_players' => 4,
+          'status' => 'waiting_for_players',
+          'created_at' => anything,
+          'started_at' => nil,
+          'finished_at' => nil,
+          '_metadata' => {
+            '_logs' => [],
+            '_players' => [],
+            '_turn' => 0,
+            '_winner' => nil
+          }
+        }
+
+        post '/games', { against_machine: false }.to_json
+
+        response = JSON.parse(last_response.body)
+        expect(last_response.status).to eq(200)
+        expect(response).to include(expected_response)
+      end
     end
   end
 
@@ -119,7 +169,7 @@ describe MakeApisFun::ClueApi::Controllers::Games do
   private
 
   def create_game(num_players: 4)
-    post '/games', { num_players: num_players }.to_json
+    post '/games', { num_players: num_players, against_machine: false }.to_json
 
     response = JSON.parse(last_response.body)
 

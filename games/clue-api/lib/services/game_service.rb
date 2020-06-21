@@ -98,7 +98,26 @@ module MakeApisFun
               player_with_card: player_with_card
             )
 
-            player_with_card
+            player_with_card || { player: nil, card: nil }
+          end
+
+          def perform_bots_actions_for(id:)
+            game = fetch_by(id: id)
+            next_player = next_player_for(game)
+
+            return unless next_player['bot']
+
+            random_cards = [
+              CardsService.random_murderer_card,
+              CardsService.random_weapon_card,
+              CardsService.random_room_card
+            ]
+
+            run_hypothesis_for(id: id, requester_id: next_player['id'], cards: random_cards)
+
+            update_turn_for(id: id)
+
+            perform_bots_actions_for(id: id)
           end
 
           def update_turn_for(id:)
@@ -170,7 +189,7 @@ module MakeApisFun
             player = player_by(winner_id, existing_game)
             raise 'User not found' unless player
 
-            existing_game['_metadata']['_winner'] = winner_id
+            existing_game['_metadata']['_winner'] = player['name']
             update(id, existing_game)
 
             true
@@ -195,6 +214,17 @@ module MakeApisFun
             validate_not_finished!(existing_game)
 
             all_players?(existing_game)
+          end
+
+          def fetch_cards_for(id:, player_id:)
+            existing_game = fetch_by(id: id)
+
+            validate_not_empty!(player_id, 'player_id')
+
+            player = player_by(player_id, existing_game)
+            raise 'User not found' unless player
+
+            player['cards']
           end
 
           private
@@ -377,6 +407,14 @@ module MakeApisFun
 
           def current_turn_for(game)
             game['_metadata']['_turn']
+          end
+
+          def next_player_for(game)
+            turn = current_turn_for(game)
+
+            player = player_by_turn_for(game, turn)
+
+            player
           end
 
           def solution_ids_for(game)
