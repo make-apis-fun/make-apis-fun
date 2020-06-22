@@ -1,4 +1,4 @@
-# Make APIs fun project [![Build Status](https://travis-ci.com/make-apis-fun/make-apis-fun.svg?branch=master)](https://travis-ci.com/make-apis-fun/make-apis-fun)
+# Make APIs fun project [![Build Status](https://travis-ci.org/make-apis-fun/make-apis-fun.svg?branch=master)](https://travis-ci.org/make-apis-fun/make-apis-fun)
 
 Welcome to the "Make APIs fun" open source project 🔥 Who said that works with Rest APIs was boring?
 
