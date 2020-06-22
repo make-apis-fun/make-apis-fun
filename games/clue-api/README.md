@@ -6,7 +6,7 @@ The object of the game is to determine **who** murdered the game's victim, **whe
 
 To achieve this goal, you should analyze the game, think about how the cards are distributed between players and perform hypothesis in your turn. After each hypothesis, you will be closer to resolve the mistery. Read **Rules** section for more information about how the game works.
 
-![https://github.com/jcagarcia/make-apis-fun/tree/master/games/clue-api/banner.png](banner.png)
+![https://github.com/make-apis-fun/make-apis-fun/tree/master/games/clue-api/banner.png](banner.png)
 
 ## Documentation
 

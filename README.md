@@ -1,10 +1,10 @@
-# Make APIs fun project [![Build Status](https://travis-ci.com/jcagarcia/make-apis-fun.svg?branch=master)](https://travis-ci.com/jcagarcia/make-apis-fun)
+# Make APIs fun project [![Build Status](https://travis-ci.com/make-apis-fun/make-apis-fun.svg?branch=master)](https://travis-ci.com/make-apis-fun/make-apis-fun)
 
 Welcome to the "Make APIs fun" open source project 🔥 Who said that works with Rest APIs was boring?
 
 Usually, we relate the Rest APIs with simple CRUD operations and boring management applications. In this repository you will find a set of APIs to **play classic board games** using just REST requests 😱
 
-![https://github.com/jcagarcia/make-apis-fun/blob/master/banner.png](banner.png)
+![https://github.com/make-apis-fun/make-apis-fun/blob/master/banner.png](banner.png)
 
 ## How to play
 
@@ -18,7 +18,7 @@ You can play to all the games developed inside the "Make APIs fun" project in ht
 
 1. Clone this repository
 ```
-git clone https://github.com/jcagarcia/make-apis-fun.git
+git clone https://github.com/make-apis-fun/make-apis-fun.git
 ```
 2. Inside the `games` folder you will find a list of games ready to be played. All the games are `dockerized` and they include `make up` instruction. Execute the following command to run a game:
 ```
@@ -34,7 +34,7 @@ Enjoy it!
 
 ## List of games
 
-* [Clue](https://github.com/jcagarcia/make-apis-fun/tree/master/games/clue-api): Cards game
+* [Clue](https://github.com/make-apis-fun/make-apis-fun/tree/master/games/clue-api): Cards game (by [jcagarcia](https://github.com/jcagarcia))
 
 ## Contributions
 
