@@ -1,0 +1,28 @@
+version: '3.4'
+services:
+  uno-api:
+    build:
+      context: .
+      target: test
+    volumes:
+      - .:/app
+    env_file:
+      - local.env
+    expose:
+      - '8086'
+    ports:
+      - '8086:8086'
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis_for_uno
+    image: redis
+    command: --port 6380
+    ports:
+      - "6380:6380"
+    expose:
+      - "6380"
+    volumes:
+      - ./data/redis:/data
+    restart: always
