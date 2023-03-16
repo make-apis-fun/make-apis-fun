@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'sinatra', '~> 2.0.2'
 gem 'sinatra-cross_origin', '~> 0.4.0'
-gem 'rack', '~> 2.1.4'
+gem 'rack', '~> 2.2.6'
 gem 'flyml', '~> 0.3.0'
 gem 'rake', '~> 12.3.1'
 gem 'puma', '~> 3.12.6'
